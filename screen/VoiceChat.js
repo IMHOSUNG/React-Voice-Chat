@@ -166,6 +166,9 @@ render () {
             data ={this.state.messageList}
             renderItem={this.renderRow}
             keyExtractor={(item,index) => index.toString()}
+            ref={ref => this.flatList = ref}
+            onContentSizeChange={() => this.flatList.scrollToEnd({animated: true})}
+            onLayout={() => this.flatList.scrollToEnd({animated: true})}
           />
           <Button style={styles.transcript}
           onPress={this._startRecognition.bind(this)}
