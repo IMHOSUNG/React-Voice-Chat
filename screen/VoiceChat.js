@@ -19,9 +19,11 @@ export default class VoiceChat extends React.Component {
 
     static navigationOptions = ({navigation}) => {
         return{
-            title : navigation.getParam('name', null)
+            title : navigation.getParam('roomName', null),
         }
+        
     }
+    
   constructor(props) {
     super(props);
     this.state = {
@@ -33,7 +35,7 @@ export default class VoiceChat extends React.Component {
             phone: props.navigation.getParam('phone'),
       },
       textMessage : '',
-      messageList : []
+      messageList : [],
     };
     Voice.onSpeechStart = this.onSpeechStart.bind(this);
     Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this);
@@ -75,7 +77,7 @@ state = {
 }
 
 componentWillMount(){
-  firebase.database().ref('messages').child(User.phone).child(this.state.person.phone)
+  firebase.database().ref('messages').child(this.props.navigation.getParam('roomKeyId'))
   .on('child_added', (value) =>{
     this.setState((prevState)=>{
       return{
@@ -104,28 +106,29 @@ sendMessage = async() => {
     
     await Voice.destroy();
     this.textInput.clear();
-    
+    let roomId = this.props.navigation.getParam('roomKeyId',null);
     if(this.state.textMessage.length > 0){
-        let msgId = firebase.database().ref('messages').child(User.phone).child(this.state.person.phone).push().key;
+       let msgId = firebase.database().ref('messages').child(roomId).push().key;
         let updates = {};
         let message = {
             message : this.state.textMessage,
             time : firebase.database.ServerValue.TIMESTAMP,
-            from : User.phone
+            writer : User.phone, 
         }
-        updates['messages/'+User.phone+'/'+this.state.person.phone+'/'+msgId] = message;
-        updates['messages/'+this.state.person.phone+'/'+User.phone+'/'+msgId] = message;
+        //updates['messages/'+User.phone+'/'+this.state.person.phone+'/'+msgId] = message;
+        //updates['messages/'+this.state.person.phone+'/'+User.phone+'/'+msgId] = message;
+        updates['messages/'+roomId+'/'+ msgId] = message;
         firebase.database().ref().update(updates);
     }else{
-      let msgId = firebase.database().ref('messages').child(User.phone).child(this.state.person.phone).push().key;
+      
+      let msgId = firebase.database().ref('messages').child(roomId).push().key;
       let updates = {};
       let message = {
           message : this.state.results[0],
           time : firebase.database.ServerValue.TIMESTAMP,
-          from : User.phone
+          writer : User.phone,    
       }
-      updates['messages/'+User.phone+'/'+this.state.person.phone+'/'+msgId] = message;
-      updates['messages/'+this.state.person.phone+'/'+User.phone+'/'+msgId] = message;
+      updates['messages/'+roomId+'/'+ msgId] = message;
       firebase.database().ref().update(updates);
     }
     this.setState({results : []});
@@ -136,8 +139,8 @@ renderRow = ({item}) =>{
   return(
     <View style = {{flexDirection :'row', 
             width : '50%', 
-            alignSelf : item.from==User.phone ? 'flex-end' : 'flex-start',
-            backgroundColor : item.from==User.phone ? '#00897b' : '#7cb342',
+            alignSelf : item.writer==User.phone ? 'flex-end' : 'flex-start',
+            backgroundColor : item.writer==User.phone ? '#00897b' : '#7cb342',
             borderRadius :5 ,
             marginBottom : 10,
             marginRight : 10,

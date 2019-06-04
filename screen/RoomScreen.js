@@ -1,3 +1,11 @@
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ * @flow
+ */
+
 import React from 'react';
 import {
   StyleSheet,
@@ -7,69 +15,76 @@ import {
   TouchableOpacity,
   FlatList,
   AsyncStorage,
-  SafeAreaView
+  SafeAreaView,
+  Alert
 } from 'react-native';
+import { thisTypeAnnotation } from '@babel/types';
+import firebase from 'firebase';
 import User from '../User';
 import styles from '../design/styles';
-import firebase from 'firebase';
+//import console = require('console');
 
-export default class HomeScreen extends React.Component {
+export default class RoomScreen extends React.Component {
     static navigationOptions = {
-        title : 'Home'
+        title : 'Room List'
     }
 
     state ={
-        users :[]
+        roomList :[]
     }
 
+    
     componentWillMount(){
-        let dbRef = firebase.database().ref('users');
+        let dbRef = firebase.database().ref('rooms');
         dbRef.on('child_added', (val)=>{
-            let person = val.val();
-            person.phone = val.key;
-            if(person.phone == User.phone){
-                User.name = person.name
-            }else{
+            let chatroom = val.val();
+            Alert.alert(chatroom.roomKeyId.toString());
             this.setState((prevState) => {
                 return{
-                    users : [...prevState.users, person]
+                    roomList : [...prevState.roomList, chatroom]
                 }
             })
-        }
+            
         })
+        
     }
-     
+    
 
     _logOut = async () => {
         await AsyncStorage.clear();
         this.props.navigation.navigate('Auth');
     }
 
+    
     renderRow = ({item}) =>{
         return(
             <TouchableOpacity
                 onPress = {() => this.props.navigation.navigate('Chat', item)} 
                 style={{padding:10, borderBottomColor:'#ccc', borderBottomWidth:1 }}>
-                <Text style ={{fontSize:20}}>{item.name}</Text>
+                <Text style ={{fontSize:20}}>{item.roomName}</Text>
             </TouchableOpacity>
         )
     }
 
-    _roomInfo = () => {
-        this.props.navigation.navigate('Room');
-    }
+    _MakeRoom = () => {
+        this.props.navigation.navigate('MakeRoom');
+    }   
+
     
+   
+    
+
     render(){
         return(
             <SafeAreaView>
                 <FlatList
-                    data = {this.state.users}
+                    data = {this.state.roomList}
                     renderItem = {this.renderRow}
-                    keyExtractor ={(item)=> item.name}
+                    keyExtractor ={(item) => item.roomKeyId}
                 />
-                <Button onPress={this._roomInfo} title="Room"></Button>
+                <Button onPress={this._MakeRoom} title="MakeRoom"></Button>
                 <Button onPress={this._logOut} title="Logout"/>
-            </SafeAreaView>          
+            </SafeAreaView> 
         )
     }
 }
