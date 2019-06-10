@@ -1,3 +1,3 @@
-#React-Native-Chat
+# React-Native-Chat
 
 ## 채팅 앱 
