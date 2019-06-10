@@ -15,12 +15,11 @@ import firebase from 'firebase';
 
 export default class HomeScreen extends React.Component {
     static navigationOptions = {
-        title : 'Home'
+        title : 'Profile'
     }
 
     state ={
-        users :[],
-        Myinfo : []
+        users :[]
     }
 
     componentWillMount(){
@@ -29,10 +28,7 @@ export default class HomeScreen extends React.Component {
             let person = val.val();
             person.phone = val.key;
             if(person.phone == User.phone){
-                User.name = person.name,
-                this.setState({
-                    Myinfo : [person]
-                });
+                User.name = person.name
             }else{
             this.setState((prevState) => {
                 return{
@@ -58,31 +54,10 @@ export default class HomeScreen extends React.Component {
             </TouchableOpacity>
         )
     }
-
-    MyrenderRow = ({item}) =>{
-        return(
-            <TouchableOpacity
-                onPress = {() => this.props.navigation.navigate('Profile', item)} 
-                style={{padding:10, borderBottomColor:'#ccc', borderBottomWidth:1 }}>
-                <Text style ={{fontSize:30}}>{item.name}</Text>
-            </TouchableOpacity>
-        )
-    }
     
     render(){
         return(
             <SafeAreaView>
-                <FlatList
-                    data = {this.state.Myinfo}
-                    renderItem = {this.MyrenderRow}
-                    keyExtractor = {(item)=>item.name}
-                />
-                
-                <FlatList
-                    data = {this.state.users}
-                    renderItem = {this.renderRow}
-                    keyExtractor ={(item)=> item.name}
-                />
                 <Button onPress={this._logOut} title="Logout"/>
             </SafeAreaView>          
         )

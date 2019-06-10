@@ -38,7 +38,6 @@ export default class RoomScreen extends React.Component {
         let dbRef = firebase.database().ref('rooms');
         dbRef.on('child_added', (val)=>{
             let chatroom = val.val();
-            Alert.alert(chatroom.roomKeyId.toString());
             this.setState((prevState) => {
                 return{
                     roomList : [...prevState.roomList, chatroom]
@@ -66,14 +65,6 @@ export default class RoomScreen extends React.Component {
         )
     }
 
-    _MakeRoom = () => {
-        this.props.navigation.navigate('MakeRoom');
-    }   
-
-    
-   
-    
-
     render(){
         return(
             <SafeAreaView>
@@ -82,7 +73,6 @@ export default class RoomScreen extends React.Component {
                     renderItem = {this.renderRow}
                     keyExtractor ={(item) => item.roomKeyId}
                 />
-                <Button onPress={this._MakeRoom} title="MakeRoom"></Button>
                 <Button onPress={this._logOut} title="Logout"/>
             </SafeAreaView> 
         )

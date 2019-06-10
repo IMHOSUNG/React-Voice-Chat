@@ -115,8 +115,7 @@ sendMessage = async() => {
             time : firebase.database.ServerValue.TIMESTAMP,
             writer : User.phone, 
         }
-        //updates['messages/'+User.phone+'/'+this.state.person.phone+'/'+msgId] = message;
-        //updates['messages/'+this.state.person.phone+'/'+User.phone+'/'+msgId] = message;
+       
         updates['messages/'+roomId+'/'+ msgId] = message;
         firebase.database().ref().update(updates);
     }else{
