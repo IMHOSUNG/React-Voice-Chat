@@ -20,8 +20,8 @@ export default class VoiceChat extends React.Component {
     static navigationOptions = ({navigation}) => {
         return{
             title : navigation.getParam('roomName', null),
-        }
-        
+            //tabBarVisible : navigation.setParam(,
+        } 
     }
     
   constructor(props) {

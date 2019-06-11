@@ -10,6 +10,7 @@ import {
   SafeAreaView
 } from 'react-native';
 import User from '../User';
+//import {Icon} from 'native-base';
 import styles from '../design/styles';
 import firebase from 'firebase';
 
