@@ -9,13 +9,12 @@ import {
   AsyncStorage,
   SafeAreaView
 } from 'react-native';
-import User from '../User';
-import styles from '../design/styles';
+import User from '../config/User';
 import firebase from 'firebase';
 
 export default class HomeScreen extends React.Component {
     static navigationOptions = {
-        title : 'Profile'
+        title : '프로필'
     }
 
     state ={
@@ -44,21 +43,11 @@ export default class HomeScreen extends React.Component {
         await AsyncStorage.clear();
         this.props.navigation.navigate('Auth');
     }
-
-    renderRow = ({item}) =>{
-        return(
-            <TouchableOpacity
-                onPress = {() => this.props.navigation.navigate('Profile', item)} 
-                style={{padding:10, borderBottomColor:'#ccc', borderBottomWidth:1 }}>
-                <Text style ={{fontSize:20}}>{item.name}</Text>
-            </TouchableOpacity>
-        )
-    }
     
     render(){
         return(
             <SafeAreaView>
-                <Button onPress={this._logOut} title="Logout"/>
+                <Button onPress={this._logOut} title="Myprofile"/>
             </SafeAreaView>          
         )
     }

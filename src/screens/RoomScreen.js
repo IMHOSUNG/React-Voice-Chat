@@ -18,16 +18,18 @@ import {
   SafeAreaView,
   Alert
 } from 'react-native';
-import { thisTypeAnnotation } from '@babel/types';
 import firebase from 'firebase';
-import User from '../User';
-import styles from '../design/styles';
-//import console = require('console');
 
 export default class RoomScreen extends React.Component {
-    static navigationOptions = {
-        title : 'Room List'
-    }
+
+    static navigationOptions = ({navigation}) => {
+        return {
+          title: '대화 목록',
+          headerRight: <Button
+                           title=" + " 
+                           onPress={ () => navigation.navigate('MakeRoom')} />
+        };
+      };
 
     state ={
         roomList :[]
@@ -49,9 +51,34 @@ export default class RoomScreen extends React.Component {
     }
     
 
+
     _logOut = async () => {
         await AsyncStorage.clear();
         this.props.navigation.navigate('Auth');
+    }
+
+    _hideRoom = (item) =>{
+        Alert.alert(item.roomKeyId);
+    }
+
+    _checkHide = (item) => {
+
+        Alert.alert(
+            '삭제',
+            item.roomName + '을 삭제하시겠습니까?',
+            [
+              {
+                text: 'Cancel',
+                onPress: () => {},
+                style: 'cancel',
+              },
+              {
+                text: 'OK',
+                onPress: () => {this._hideRoom(item)},
+              },
+            ],
+            {cancelable: false},
+          );
     }
 
     
@@ -59,6 +86,7 @@ export default class RoomScreen extends React.Component {
         return(
             <TouchableOpacity
                 onPress = {() => this.props.navigation.navigate('Chat', item)} 
+                onLongPress = {() => this._checkHide(item)}
                 style={{padding:10, borderBottomColor:'#ccc', borderBottomWidth:1 }}>
                 <Text style ={{fontSize:20}}>{item.roomName}</Text>
             </TouchableOpacity>
@@ -72,8 +100,7 @@ export default class RoomScreen extends React.Component {
                     data = {this.state.roomList}
                     renderItem = {this.renderRow}
                     keyExtractor ={(item) => item.roomKeyId}
-                />
-                <Button onPress={this._logOut} title="Logout"/>
+                />                
             </SafeAreaView> 
         )
     }

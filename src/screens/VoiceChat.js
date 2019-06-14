@@ -8,10 +8,10 @@ import {
   KeyboardAvoidingView,
   Dimensions,
   Alert,
-  FlatList 
+  FlatList,
+  StyleSheet
 } from 'react-native';
-import styles from '../design/styles';
-import User from '../User';
+import User from '../config/User';
 import Voice from 'react-native-voice';
 import firebase from 'firebase';
 
@@ -193,3 +193,24 @@ render () {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  input : {
+    padding : 10,
+    borderWidth : 1,
+    borderColor : '#ccc',
+    width :'85%',
+    marginBottom : 1,
+    borderRadius : 5
+  },
+  btnText :{
+    color:'#000',
+    fontSize : 20,
+  }
+});

@@ -9,14 +9,13 @@ import {
   AsyncStorage,
   SafeAreaView
 } from 'react-native';
-import User from '../User';
-//import {Icon} from 'native-base';
-import styles from '../design/styles';
+import User from '../config/User';
+
 import firebase from 'firebase';
 
 export default class HomeScreen extends React.Component {
     static navigationOptions = {
-        title : 'Home'
+        title : '메인 화면'
     }
 
     state ={
@@ -43,27 +42,23 @@ export default class HomeScreen extends React.Component {
         }
         })
     }
-     
 
-    _logOut = async () => {
-        await AsyncStorage.clear();
-        this.props.navigation.navigate('Auth');
-    }
-
-    renderRow = ({item}) =>{
+    //Home profile name about friend
+    friendRow = ({item}) =>{
         return(
             <TouchableOpacity
-                onPress = {() => this.props.navigation.navigate('Profile', item)} 
+                onPress = {() => this.props.navigation.navigate('FriendProfile', item)} 
                 style={{padding:10, borderBottomColor:'#ccc', borderBottomWidth:1 }}>
                 <Text style ={{fontSize:20}}>{item.name}</Text>
             </TouchableOpacity>
         )
     }
 
-    MyrenderRow = ({item}) =>{
+    //Home Profile name about me >> bold and other style 
+    myProfileRow = ({item}) =>{
         return(
             <TouchableOpacity
-                onPress = {() => this.props.navigation.navigate('Profile', item)} 
+                onPress = {() => this.props.navigation.navigate('MyProfile', item)} 
                 style={{padding:10, borderBottomColor:'#ccc', borderBottomWidth:1 }}>
                 <Text style ={{fontSize:30}}>{item.name}</Text>
             </TouchableOpacity>
@@ -75,16 +70,15 @@ export default class HomeScreen extends React.Component {
             <SafeAreaView>
                 <FlatList
                     data = {this.state.Myinfo}
-                    renderItem = {this.MyrenderRow}
+                    renderItem = {this.myProfileRow}
                     keyExtractor = {(item)=>item.name}
                 />
                 
                 <FlatList
                     data = {this.state.users}
-                    renderItem = {this.renderRow}
+                    renderItem = {this.friendRow}
                     keyExtractor ={(item)=> item.name}
                 />
-                <Button onPress={this._logOut} title="Logout"/>
             </SafeAreaView>          
         )
     }

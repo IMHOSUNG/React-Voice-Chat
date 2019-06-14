@@ -10,13 +10,12 @@ TextInput,
   AsyncStorage,
   SafeAreaView
 } from 'react-native';
-import User from '../User';
-import styles from '../design/styles';
+import User from '../config/User';
 import firebase from 'firebase';
 
 export default class NewRoomScreen extends React.Component {
     static navigationOptions = {
-        title : 'MakeRoom'
+        title : '방 생성'
     }
 
     state ={
@@ -75,3 +74,24 @@ export default class NewRoomScreen extends React.Component {
         )
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#F5FCFF',
+    },
+    input : {
+      padding : 10,
+      borderWidth : 1,
+      borderColor : '#ccc',
+      width :'85%',
+      marginBottom : 1,
+      borderRadius : 5
+    },
+    btnText :{
+      color:'#000',
+      fontSize : 20,
+    }
+  });

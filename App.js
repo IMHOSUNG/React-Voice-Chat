@@ -1,28 +1,34 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
+import {createMaterialTopTabNavigator,createSwitchNavigator, createStackNavigator, createAppContainer} from 'react-navigation';
+import LoginScreen from './src/screens/LoginScreen';
+import HomeScreen from './src/screens/HomeScreen';
+import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
+import VoiceChat from './src/screens/VoiceChat';
+import RoomScreen from './src/screens/RoomScreen';
+import MakeRoomScreen from './src/screens/NewRoomScreen';
+import MyProfileScreen from './src/screens/MyProfileScreen';
+import FriendProfileScreen from './src/screens/FriendProfileScreen';
+import SettingScreen from './src/screens/SettingScreen'
+import {Platform} from 'react-native';
+import {Icon} from 'native-base';
 import React from 'react';
-import { Platform, createMaterialTopTabNavigator,createBottomTabNavigator ,createSwitchNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
-import LoginScreen from './screen/LoginScreen';
-import HomeScreen from './screen/HomeScreen';
-import AuthLoadingScreen from './screen/AuthLoadingScreen';
-import VoiceChat from './screen/VoiceChat';
-import RoomScreen from './screen/RoomScreen';
-import MakeRoomScreen from './screen/NewRoomScreen';
-import ProfileScreen from './screen/ProfileScreen';
-// Implementation of HomeScreen, OtherScreen, SignInScreen, AuthLoadingScreen
-// goes here.
+
+// 배포 전 false 로 바꾸고 에러 고칠 것
+console.disableYellowBox = true;
 
 const HomeStack = createStackNavigator(
   {
     Home : HomeScreen,
-    Profile : ProfileScreen,
-  }
+    MyProfile : MyProfileScreen,
+    FriendProfile : FriendProfileScreen,
+  },
+  {
+    navigationOptions : ({ navigation }) => {
+      let tabBarVisible = true;
+      let swipeEnabled = true;
+
+      return { tabBarVisible , swipeEnabled}
+    }
+  },
 );
 
 const ChatStack = createStackNavigator(
@@ -30,53 +36,89 @@ const ChatStack = createStackNavigator(
      Room : RoomScreen,
      Chat : VoiceChat,
      MakeRoom : MakeRoomScreen
-  }
+  },
+  {
+    navigationOptions : ({ navigation }) => {
+      let tabBarVisible = true;
+      let swipeEnabled = true;
+      if (navigation.state.index == 1) {
+        tabBarVisible = false;
+        swipeEnabled = false;
+      }
+      return { tabBarVisible , swipeEnabled}
+    }
+  },
 );
 
-ChatStack.navigationOptions = ({ navigation }) => {
-  let tabBarVisible = true;
-  if (navigation.state.index == 1) {
-    tabBarVisible = false;
-  }
-
-  return {
-    tabBarVisible,
-  };
-};
+const SettingStack = createStackNavigator(
+  {
+    Setting : SettingScreen
+  },
+  {
+    navigationOptions : ({ navigation }) => {
+      let tabBarVisible = true;
+      let swipeEnabled = true;
+      return { tabBarVisible , swipeEnabled}
+    }
+  },
+);
 
 const AppStack = createMaterialTopTabNavigator(
   { 
-    Home: HomeStack ,  
-    Room : ChatStack, 
-    Setting : ProfileScreen,
+    Home: {
+      screen: HomeStack,
+      navigationOptions: {
+        tabBarIcon: ({tintColor}) => (
+          <Icon name = 'ios-person' style = {{color: tintColor}}/>
+        )
+      }
+    },  
+    Room : {
+      screen: ChatStack,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => (
+          <Icon name = 'ios-chatbubbles' style = {{color:tintColor}}/>
+        )
+      }
+    }, 
+    Setting : {
+      screen: SettingStack,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => (
+          <Icon name = 'ios-settings' style = {{color:tintColor}}/>
+        )
+      }
+    }
   },
   {
     bounces: true,
     animationEnabled: true,
-    swipeEnabled: true,
     tabBarPosition: "bottom",
     tabBarOptions: {
-        iconStyle: {height: 50},
+        style: {
+            ...Platform.select({
+                ios:{
+                    backgroundColor: 'white',
+                },
+                android:{
+                    backgroundColor:'white',
+                }
+            })
+        },
+        iconStyle: {height: 30},
         activeTintColor: '#0000',
         inactiveTintColor: '#d1cece',
         upperCaseLabel: false,
-        showLabel: true,
+        showLabel: false,
         showIcon: true,
     }
 });
-
-const AuthStack = createStackNavigator(
-  { Login: LoginScreen  }
-);
-
-//배포하기 전 용도
-console.disableYellowBox = true;
 
 export default createAppContainer(createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen, 
     App: AppStack,
-    Auth: AuthStack,
+    Auth: LoginScreen,
   },
   {
     initialRouteName: 'AuthLoading',

@@ -7,9 +7,9 @@ import {
   Alert
 } from 'react-native';
 
-import User from '../User';
+import User from '../config/User';
 import firebase from 'firebase'
-import FireBaseConfig from '../FireBaseConfig';
+import FireBaseConfig from '../config/FireBaseConfig';
 
 export default class AuthLoadingScreen extends React.Component {
   constructor(props) {
@@ -18,7 +18,7 @@ export default class AuthLoadingScreen extends React.Component {
   }
 
    componentWillMount(){
-    var firebaseConfig = 
+    const firebaseConfig = 
     {
         apiKey: FireBaseConfig.apiKey,
         authDomain: FireBaseConfig.authDomain,
